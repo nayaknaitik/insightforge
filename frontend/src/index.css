@@ -1,0 +1,239 @@
+@import 'tailwindcss';
+
+/* ---------------------------------------------------------------------------
+   InsightForge design tokens.
+   Two worlds on purpose: dark instrument chrome for the machinery, warm
+   backlit "plates" for anything that is actually the user's data.
+--------------------------------------------------------------------------- */
+@theme {
+  --color-ink-950: #070b11;
+  --color-ink-900: #0a0f16;
+  --color-ink-850: #0f1620;
+  --color-ink-800: #151e29;
+  --color-ink-700: #1c2836;
+  --color-ink-600: #263342;
+  --color-line: #22303f;
+  --color-line-soft: #18222e;
+
+  --color-plate: #f6f3ec;
+  --color-plate-2: #eae5da;
+  --color-plate-ink: #131c26;
+  --color-plate-mute: #6a7583;
+  --color-plate-line: #d8d1c3;
+
+  --color-fg: #e8eef5;
+  --color-fg-2: #9aa9ba;
+  --color-fg-3: #64768b;
+
+  --color-amber: #ff8a3d;
+  --color-amber-deep: #e4572e;
+  --color-meter: #6ab7e8;
+  --color-good: #5fbf8b;
+  --color-warn: #e8b45f;
+  --color-bad: #ef6b5e;
+
+  /* validated categorical series palette (light plate surface) */
+  --color-s1: #c4561e;
+  --color-s2: #1b6ec2;
+  --color-s3: #0e8f63;
+  --color-s4: #7a4fbf;
+  --color-s5: #c42b5c;
+  --color-s6: #a87400;
+
+  --font-display: 'Bricolage Grotesque', 'Helvetica Neue', system-ui, sans-serif;
+  --font-sans: 'IBM Plex Sans', system-ui, -apple-system, sans-serif;
+  --font-mono: 'IBM Plex Mono', ui-monospace, 'SF Mono', Menlo, monospace;
+}
+
+* { box-sizing: border-box; }
+
+html, body, #root { height: 100%; }
+
+body {
+  margin: 0;
+  background: var(--color-ink-900);
+  color: var(--color-fg);
+  font-family: var(--font-sans);
+  font-size: 14px;
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* the forge: a faint heat glow behind the whole shell */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(60rem 30rem at 12% -10%, rgba(255, 138, 61, 0.09), transparent 70%),
+    radial-gradient(50rem 26rem at 92% 6%, rgba(106, 183, 232, 0.07), transparent 70%);
+  z-index: 0;
+}
+
+::selection { background: rgba(255, 138, 61, 0.28); }
+
+:focus-visible {
+  outline: 2px solid var(--color-amber);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* scrollbars read as instrument tracks, not OS chrome */
+::-webkit-scrollbar { width: 10px; height: 10px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: #24313f; border-radius: 99px; border: 3px solid transparent; background-clip: content-box; }
+::-webkit-scrollbar-thumb:hover { background: #33465a; background-clip: content-box; }
+
+@layer components {
+  .eyebrow {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--color-fg-3);
+  }
+
+  .panel {
+    background: linear-gradient(180deg, rgba(21, 30, 41, 0.9), rgba(15, 22, 32, 0.9));
+    border: 1px solid var(--color-line);
+    border-radius: 14px;
+  }
+
+  /* a "plate": backlit warm surface where the user's own data lives */
+  .plate {
+    background: var(--color-plate);
+    color: var(--color-plate-ink);
+    border-radius: 12px;
+    border: 1px solid #cfc7b6;
+    box-shadow: 0 1px 0 rgba(255, 255, 255, 0.5) inset, 0 12px 28px -18px rgba(0, 0, 0, 0.9);
+  }
+
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 14px;
+    border-radius: 9px;
+    border: 1px solid var(--color-line);
+    background: var(--color-ink-800);
+    color: var(--color-fg);
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background 0.15s ease, border-color 0.15s ease, transform 0.1s ease;
+  }
+  .btn:hover:not(:disabled) { background: var(--color-ink-700); border-color: #31445a; }
+  .btn:active:not(:disabled) { transform: translateY(1px); }
+  .btn:disabled { opacity: 0.45; cursor: not-allowed; }
+
+  .btn-hot {
+    background: linear-gradient(180deg, #ff9a52, #e4572e);
+    border-color: #ff8a3d;
+    color: #170c05;
+    font-weight: 600;
+  }
+  .btn-hot:hover:not(:disabled) { background: linear-gradient(180deg, #ffab6d, #ef6535); border-color: #ffa763; }
+
+  .chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 3px 9px;
+    border-radius: 99px;
+    border: 1px solid var(--color-line);
+    background: rgba(28, 40, 54, 0.7);
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--color-fg-2);
+  }
+
+  .field {
+    width: 100%;
+    padding: 9px 12px;
+    border-radius: 9px;
+    border: 1px solid var(--color-line);
+    background: var(--color-ink-950);
+    color: var(--color-fg);
+    font-family: inherit;
+    font-size: 13px;
+  }
+  .field::placeholder { color: var(--color-fg-3); }
+  .field:focus { outline: none; border-color: var(--color-amber); box-shadow: 0 0 0 3px rgba(255, 138, 61, 0.14); }
+
+  .num { font-family: var(--font-mono); font-variant-numeric: tabular-nums; }
+}
+
+/* markdown inside assistant answers */
+.prose-forge { font-size: 14px; line-height: 1.65; }
+.prose-forge > * + * { margin-top: 0.7em; }
+.prose-forge h1, .prose-forge h2, .prose-forge h3 {
+  font-family: var(--font-display);
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  margin-top: 1.1em;
+}
+.prose-forge h1 { font-size: 19px; }
+.prose-forge h2 { font-size: 17px; }
+.prose-forge h3 { font-size: 15px; }
+.prose-forge strong { color: #fff; font-weight: 600; }
+.prose-forge ul, .prose-forge ol { padding-left: 1.15rem; }
+.prose-forge li + li { margin-top: 0.25em; }
+.prose-forge ul { list-style: disc; }
+.prose-forge ol { list-style: decimal; }
+.prose-forge code {
+  font-family: var(--font-mono);
+  font-size: 12.5px;
+  background: rgba(106, 183, 232, 0.12);
+  color: #b6dcf3;
+  padding: 1px 5px;
+  border-radius: 5px;
+}
+.prose-forge pre {
+  background: var(--color-ink-950);
+  border: 1px solid var(--color-line);
+  border-radius: 10px;
+  padding: 12px 14px;
+  overflow-x: auto;
+}
+.prose-forge pre code { background: none; padding: 0; color: #cfe3f2; }
+.prose-forge table { width: 100%; border-collapse: collapse; font-size: 13px; }
+.prose-forge th, .prose-forge td {
+  border-bottom: 1px solid var(--color-line);
+  padding: 6px 10px;
+  text-align: left;
+}
+.prose-forge th { color: var(--color-fg-2); font-weight: 500; font-size: 12px; }
+.prose-forge td { font-variant-numeric: tabular-nums; }
+.prose-forge blockquote {
+  border-left: 2px solid var(--color-amber);
+  padding-left: 12px;
+  color: var(--color-fg-2);
+}
+.prose-forge a { color: var(--color-meter); text-decoration: underline; text-underline-offset: 2px; }
+
+@keyframes forge-pulse {
+  0%, 100% { opacity: 0.35; }
+  50% { opacity: 1; }
+}
+@keyframes forge-sweep {
+  from { background-position: 200% 0; }
+  to { background-position: -200% 0; }
+}
+@keyframes forge-rise {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: none; }
+}
+
+.rise { animation: forge-rise 0.35s cubic-bezier(0.2, 0.8, 0.2, 1) both; }
+.pulse-dot { animation: forge-pulse 1.4s ease-in-out infinite; }
+.sweep {
+  background: linear-gradient(90deg, transparent, rgba(255, 138, 61, 0.75), transparent);
+  background-size: 200% 100%;
+  animation: forge-sweep 1.6s linear infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 0.001ms !important; transition-duration: 0.001ms !important; }
+}
